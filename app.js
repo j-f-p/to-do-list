@@ -1,14 +1,12 @@
 function onReady() {
   // select elements
-  const addToDoForm = document.getElementById('addToDoForm');
+  const addToDoButton= document.getElementById('addToDoButton');
   const newToDoText = document.getElementById('newToDoText');
   const toDoList = document.getElementById('toDoList');
   const resetForm = document.getElementById('resetForm');
 
-
-
   // add listner
-  addToDoForm.addEventListener('submit', (event) => {
+  addToDoButton.addEventListener('click', (event) => {
     event.preventDefault();
 
     // retreive text
@@ -20,22 +18,15 @@ function onReady() {
     // create new input for checkbox
     let checkbox = document.createElement('input');
 
-    // create new input for delete button form
-    let deleteButtonForm = document.createElement('form');
-
     // create new input for delete button
-    let deleteButton = document.createElement('input');
+    let deleteButton = document.createElement('button');
 
     // set checkbox input's type to checkbox
     checkbox.type = "checkbox";
 
     // set deleteButton input's type and value
-    deleteButton.type = "submit";
-    deleteButton.value = "delete";
-
-    // set deleteButtonForm id and assign it a child
-    deleteButtonForm.id = "task" + toDoList.childNodes.length;
-    deleteButtonForm.appendChild(deleteButton);
+    // button default type is "submit"
+    deleteButton.textContent = "delete";
 
     // set title and assign id
     newLi.textContent = title;
@@ -44,37 +35,36 @@ function onReady() {
     //attach the checkbox to the li
     newLi.appendChild(checkbox);
 
-    //attach the delete button form to the li
-    newLi.appendChild(deleteButtonForm);
+    //attach the delete button to the li
+    newLi.appendChild(deleteButton);
 
     // attach title to ul
     toDoList.appendChild(newLi);
 
     // generate reset button and define its action
     if(toDoList.childNodes.length==3) {
-      let resetButton = document.createElement('input');
-      resetButton.type = 'submit';
-      resetButton.value = 'reset';
+      let resetButton = document.createElement('button');
+      resetButton.textContent = 'reset';
       resetForm.appendChild(resetButton);
 
-      resetForm.addEventListener('submit', (resetEvent) => {
-        // reload page
+      resetForm.addEventListener('click', (resetEvent) => {
+        window.location.reload();
       });
     }
 
     // delete button action, defined after toDoList.appendChild, toDoList.childNodes.length>=1
-    deleteButtonForm.addEventListener('submit',
+    deleteButton.addEventListener('click',
       (taskEvent) => {
-	if( toDoList.childNodes.length > 3 ) {
-          taskEvent.preventDefault();
-          toDoList.removeChild( document.getElementById(newLi.id) );
-	}
-        else if ( toDoList.childNodes.length > 2 ) {
-          taskEvent.preventDefault();
-          toDoList.removeChild( document.getElementById(newLi.id) );
-          resetForm.removeChild(resetForm.lastChild);
+        if( toDoList.childNodes.length > 3 ) {
+          toDoList.removeChild(newLi);
         }
-	// else reload page
+        else if ( toDoList.childNodes.length > 2 ) {
+          toDoList.removeChild(newLi);
+          resetForm.removeChild(resetForm.lastChild);
+          newToDoText.focus();
+        }
+        else
+          window.location.reload();
       }
     );
 
